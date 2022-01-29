@@ -22,7 +22,7 @@ Example usage:
 """
 
 import os
-import shutil
+import shutil # 高阶文件操作
 import tarfile
 import tempfile
 from absl import app
