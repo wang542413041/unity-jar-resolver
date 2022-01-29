@@ -22,7 +22,7 @@ Example usage:
 """
 
 import os
-import shutil # 高阶文件操作
+import shutil
 import tarfile
 import tempfile
 from absl import app
@@ -31,6 +31,7 @@ from absl import logging
 
 FLAGS = flags.FLAGS
 
+# 入参getopts等同
 flags.DEFINE_multi_string(
     "projects", None, "Paths to Unity project directories to unpack packages "
     "into. This should be the directory that contains the Assets directory, "
@@ -80,9 +81,9 @@ def unpack_to_directory(directory, packages):
     with tarfile.open(unitypackage) as unitypackage_file:
       member_names = unitypackage_file.getnames()
       guid_to_path = {}
-      extracted_files = set()
+      extracted_files = set() # 提取文件数组，使用set数据结构，资源不会重复
 
-      # Map each asset GUID to an extract path the path of each extracted asset.
+      # Map each asset GUID to an extract path the path of each extracted asset.将每个资源GUID映射到提取路径每个提取资源的路径。
       for filename in member_names:
         if os.path.basename(filename) == "pathname":
           guid = os.path.dirname(filename)
@@ -92,7 +93,7 @@ def unpack_to_directory(directory, packages):
               extracted_files.add(filename)
               guid_to_path[guid] = pathname
 
-      # Extract each asset to the appropriate path in the output directory.
+      # Extract each asset to the appropriate path in the output directory.将每个资源提取到输出目录中的适当路径。
       for filename in member_names:
         basename = os.path.basename(filename)
         if basename == "asset" or basename == "asset.meta":
@@ -108,7 +109,7 @@ def unpack_to_directory(directory, packages):
                   shutil.copyfileobj(member_file, output_file)
                   extracted_files.add(filename)
 
-      # Returns the list of files that could not be extracted in the archive's
+      # Returns the list of files that could not be extracted in the archive's返回无法在存档文件中提取的文件列表
       # order.
       ignored_files = []
       for member in member_names:
